@@ -1,1 +1,126 @@
-# petascale
+# Containers in HPC 
+
+## Presented in the Petascale Computing Institute 2019
+
+This page is meant as a quick reference for the commands presented during the 
+Petascale Institute, and to facilitate cutting-and-pasting where necessary.
+This page is not meant to be a standalone reference guide for using containers
+in an HPC environment.
+
+https://bluewaters.ncsa.illinois.edu/petascale-computing-2019
+
+
+### Part 1: Docker on Local Machine
+
+Installation:
+
+https://docs.docker.com/docker-for-windows/install/
+https://docs.docker.com/docker-for-mac/install/
+https://docs.docker.com/install/linux/docker-ce/ubuntu/
+https://docs.docker.com/install/linux/docker-ce/centos/
+
+Basic commands:
+```
+$ docker version      # show version information
+
+$ docker images       # show images you have pulled
+
+$ docker ps           # show running containers
+
+$ docker run hello-world       
+
+... a slightly better way to do it:
+
+$ docker pull hello-world:latest
+
+$ docker images
+
+$ docker run hello-world:latest
+
+$ docker inspect hello-world
+```
+
+Real-world example:
+```
+$ docker pull biocontainers/fastqc:v0.11.5_cv4
+
+$ docker run --rm biocontainers/fastqc:v0.11.5_cv4 fastqc --help
+```
+
+Interactive example:
+```
+$ docker run --rm -it biocontainers/fastqc:v0.11.5_cv4 /bin/bash
+
+[container]$ pwd
+/data
+
+[container]$ whoami
+biodocker
+
+[container]$ which fastqc
+/usr/local/bin/fastqc
+
+[container]$ fastqc --help
+```
+
+
+### Part 2: Develop your own Container
+
+The Dockerfile:
+```
+$ pwd 
+/Users/username/fastqc-dev-folder
+
+$ ls
+Dockerfile
+
+$ cat Dockerfile
+FROM ubuntu:16.04
+
+RUN apt-get update && apt-get upgrade -y \
+    && apt-get install -y default-jre perl wget zip
+
+RUN wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.7.zip \
+    && unzip fastqc_v0.11.7.zip \
+    && rm fastqc_v0.11.7.zip \
+    && chmod +x /FastQC/fastqc 
+
+ENV PATH "/FastQC:$PATH"
+```
+
+Build and push:
+```
+$ docker build -t username/fastqc:0.11.7 ./
+
+$ docker images
+REPOSITORY         TAG         IMAGE ID          CREATED             SIZE
+username/fastqc    0.11.7      2005acfb2869      16 minutes ago      460MB
+hello-world        latest      fce289e99eb9      7 months ago        1.84kB
+
+$ docker run --rm username/fastqc:0.11.7 which fastqc
+/FastQC/fastqc
+
+$ docker push username/fastqc:0.11.7
+```
+
+NOTE: replace `username` with your Docker Hub username
+
+Getting more help:
+```
+$ docker --help            # show all docker options and summaries
+
+$ docker COMMAND --help    # show options and summaries for a particular 
+                           # command
+```
+
+
+### Part 3a: Containers on Stampede2
+
+### Part 3a: Containers on Blue Waters
+
+### Part 3a: Containers on Cori
+
+
+
+
+
