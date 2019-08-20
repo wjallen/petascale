@@ -7,7 +7,7 @@ Petascale Institute, and to facilitate cutting-and-pasting where necessary.
 This page is not meant to be a standalone reference guide for using containers
 in an HPC environment.
 
-[https://bluewaters.ncsa.illinois.edu/petascale-computing-2019]
+[https://bluewaters.ncsa.illinois.edu/petascale-computing-2019](https://bluewaters.ncsa.illinois.edu/petascale-computing-2019)
 
 <br>
 
