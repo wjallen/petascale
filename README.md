@@ -7,20 +7,25 @@ Petascale Institute, and to facilitate cutting-and-pasting where necessary.
 This page is not meant to be a standalone reference guide for using containers
 in an HPC environment.
 
-https://bluewaters.ncsa.illinois.edu/petascale-computing-2019
+[https://bluewaters.ncsa.illinois.edu/petascale-computing-2019]
+
+<br>
 
 
 ### Part 1: Docker on Local Machine
 
 Installation:
 
-https://docs.docker.com/docker-for-windows/install/
+[https://docs.docker.com/docker-for-windows/install/]
 
-https://docs.docker.com/docker-for-mac/install/
+[https://docs.docker.com/docker-for-mac/install/]
 
-https://docs.docker.com/install/linux/docker-ce/ubuntu/
+[https://docs.docker.com/install/linux/docker-ce/ubuntu/]
 
-https://docs.docker.com/install/linux/docker-ce/centos/
+[https://docs.docker.com/install/linux/docker-ce/centos/]
+
+[https://training.play-with-docker.com/beginner-linux/]
+
 
 Basic commands:
 ```
@@ -67,6 +72,8 @@ biodocker
 
 [container]$ fastqc --help
 ```
+
+<br>
 
 
 ### Part 2: Develop your own Container
@@ -116,15 +123,17 @@ $ docker COMMAND --help    # show options and summaries for a particular
                            # command
 ```
 
+<br>
 
 ### Part 3a: Containers on Stampede2
 
+Login:
 ```
-# Login
-
 $ ssh USER@stampede2.tacc.utexas.edu
+```
 
-# Stage the data
+Stage the data:
+```
 [login]$ wget https://wjallen.github.io/petascale/SP1.fq
 [login]$ head SP1.fq
 @@cluster_2:UMI_ATTCCG
@@ -137,46 +146,209 @@ TATCCTTGCAATACTCTCCGAACGGGAGAGC
 1/04.72,(003,-2-22+00-12./.-.4-
 @cluster_12:UMI_GGTCAA
 GCAGTTTAAGATCATTTTATTGAAGAGCAAG
+```
 
-# Pull the container
+Pull the container:
+```
 [login]$ idev 
 ...
 [compute]$ module load tacc-singularity python3
 [compute]$ singularity pull --name wallen-fastqc-0.11.7.simg docker://wallen/fastqc:0.11.7
 [compute]$ ls $WORK/singularity_cache/
+```
 
-# Prepare the job script and submit the job
+Prepare the job script and submit the job:
+```
 [login]$ cat singularity_job.slurm
 #!/bin/bash
 #SBATCH -J myjob
 #SBATCH -o myjob.o%j
-#SBATCH -e myjob.e%j
-#SBATCH -p skx-dev
 #SBATCH -N 1
 #SBATCH -n 1
 #SBATCH -t 00:10:00
-#SBATCH -A myproject   # Allocation name
+#SBATCH -p skx-dev
+#SBATCH -A myalloc   # Allocation name
 
 module load tacc-singularity
-module swap python2 python3
 
 SIMG=$WORK/singularity_cache/wallen-fastqc-0.11.7.simg
 
 singularity exec $SIMG fastqc SP1.fq
 
 [login]$ sbatch singularity_job.slurm
+...
+Submitted batch job 4197252
 ```
 
-### Part 3a: Containers on Blue Waters
+<br>
 
-### Part 3a: Containers on Cori
+### Part 3b: Containers on Blue Waters
+
+Login:
+```
+$ ssh USER@bwbay.ncsa.illinois.edu
+```
+
+Stage the data:
+```
+[login]$ wget https://wjallen.github.io/petascale/SP1.fq
+[login]$ head SP1.fq
+@@cluster_2:UMI_ATTCCG
+TTTCCGGGGCACATAATCTTCAGCCGGGCGC
++
+9C;=;=<9@4868>9:67AA<9>65<=>591
+@cluster_8:UMI_CTTTGA
+TATCCTTGCAATACTCTCCGAACGGGAGAGC
++
+1/04.72,(003,-2-22+00-12./.-.4-
+@cluster_12:UMI_GGTCAA
+GCAGTTTAAGATCATTTTATTGAAGAGCAAG
+```
+
+Pull the container:
+```
+[login]$ qsub -I -l nodes=1:ppn=1 -l walltime=00:30:00
+...
+[compute]$ module load shifter
+[compute]$ shifterimg pull docker:wallen/fastqc:0.11.7
+2019-08-19T15:44:49 Pulling Image: docker:wallen/fastqc:0.11.7, status: READY
+[compute]$ shifterimg images | grep fastqc
+bluewaters docker     READY    6d2726df2e   2019-08-19T15:44:14 wallen/fastqc:0.11.7
+```
+
+Prepare the job script and submit the job:
+```
+[login]$ cat shifter_job.pbs
+#!/bin/bash
+#PBS -N testjob
+#PBS -e $PBS_JOBID.err
+#PBS -o $PBS_JOBID.out
+#PBS -l nodes=1:ppn=1:xe
+#PBS -l walltime=00:10:00
+#PBS -A myalloc
+#PBS -l gres=shifter16
+
+module load shifter
+IMG=docker:wallen/fastqc:0.11.7
+
+aprun -b shifter --image=$IMG fastqc SP1.fq
+
+[login]$ qsub shifter_job.pbs
+INFO: Job submitted to account: myalloc
+10240521.bw
+```
+
+<br>
 
 
 
+### Part 3c: Containers on Cori
 
+Login:
+```
+$ ssh USER@cori.nersc.gov
+```
 
+Stage the data:
+```
+[login]$ wget https://wjallen.github.io/petascale/SP1.fq
+[login]$ head SP1.fq
+@@cluster_2:UMI_ATTCCG
+TTTCCGGGGCACATAATCTTCAGCCGGGCGC
++
+9C;=;=<9@4868>9:67AA<9>65<=>591
+@cluster_8:UMI_CTTTGA
+TATCCTTGCAATACTCTCCGAACGGGAGAGC
++
+1/04.72,(003,-2-22+00-12./.-.4-
+@cluster_12:UMI_GGTCAA
+GCAGTTTAAGATCATTTTATTGAAGAGCAAG
+```
+
+Pull the container:
+```
+[login]$ salloc -N 1 -C haswell -q interactive -t 00:30:00
+...
+[compute]$ shifterimg pull docker:wallen/fastqc:0.11.7
+2019-08-19T14:02:58 Pulling Image: docker:wallen/fastqc:0.11.7, status: READY
+[compute]$ shifterimg images | grep fastqc
+cori       docker     READY    6d2726df2e   2019-08-19T14:02:57 wallen/fastqc:0.11.7
+```
+
+Prepare the job script and submit the job:
+```
+[login]$ cat shifter_job.slurm 
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --time=00:10:00
+#SBATCH --qos=debug
+#SBATCH --constraint=haswell
+#SBATCH --image=docker:wallen/fastqc:0.11.7
+
+srun -n 1 shifter fastqc SP1.fq
+
+[login]$ sbatch shifter_job.slurm
+Submitted batch job 24000106
+```
+
+<br>
 
 
 ### Part 4: Reference
 
-links down here
+Docker:
+
+[https://www.docker.com/]
+
+[https://docs.docker.com/get-started/]
+
+[https://training.play-with-docker.com/beginner-linux/]
+
+
+Singularity:
+
+[https://singularity.lbl.gov/]
+
+[https://sylabs.io/]
+
+
+Shifter:
+
+[https://github.com/NERSC/shifter]
+
+[https://docs.nersc.gov/programming/shifter/how-to-use/]
+
+[https://bluewaters.ncsa.illinois.edu/shifter]
+
+
+Containers:
+
+[https://hub.docker.com/]
+
+[https://singularity-hub.org/]
+
+[https://biocontainers.pro/]
+
+Sample data:
+
+Jay Hesselberth
+
+Genome Analysis Workshop
+
+https://molb7621.github.io/workshop/index.html 
+
+
+Questions:
+
+Joe Allen | wallen@tacc.utexas.edu
+
+
+
+
+
+
+
+
+
+
+
