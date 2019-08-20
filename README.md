@@ -347,7 +347,7 @@ Genome Analysis Workshop
 
 Questions:
 
-Joe Allen, wallen@tacc.utexas.edu
+Joe Allen, wallen at tacc dot utexas dot edu
 
 <br>
 
