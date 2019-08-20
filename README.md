@@ -305,7 +305,7 @@ Docker:
 
 [https://training.play-with-docker.com/beginner-linux/](https://training.play-with-docker.com/beginner-linux/)
 
-
+<br>
 
 Singularity:
 
@@ -313,7 +313,7 @@ Singularity:
 
 [https://sylabs.io/](https://sylabs.io/)
 
-
+<br>
 
 Shifter:
 
@@ -323,7 +323,7 @@ Shifter:
 
 [https://bluewaters.ncsa.illinois.edu/shifter](https://bluewaters.ncsa.illinois.edu/shifter)
 
-
+<br>
 
 Containers:
 
@@ -333,7 +333,7 @@ Containers:
 
 [https://biocontainers.pro/](https://biocontainers.pro/)
 
-
+<br>
 
 Sample data:
 
@@ -343,7 +343,11 @@ Genome Analysis Workshop
 
 [https://molb7621.github.io/workshop/index.html](https://molb7621.github.io/workshop/index.html)
 
+<br>
 
 Questions:
 
 Joe Allen, wallen@tacc.utexas.edu
+
+<br>
+
