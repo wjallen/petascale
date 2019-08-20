@@ -1,8 +1,8 @@
-# Containers in HPC 
+# Containers in HPC
 
 ## Presented in the Petascale Computing Institute 2019
 
-This page is meant as a quick reference for the commands presented during the 
+This page is meant as a quick reference for the commands presented during the
 Petascale Institute, and to facilitate cutting-and-pasting where necessary.
 This page is not meant to be a standalone reference guide for using containers
 in an HPC environment.
@@ -16,15 +16,16 @@ in an HPC environment.
 
 Installation:
 
-[https://docs.docker.com/docker-for-windows/install/]
+[https://docs.docker.com/docker-for-windows/install/](https://docs.docker.com/docker-for-windows/install/)
 
-[https://docs.docker.com/docker-for-mac/install/]
+[https://docs.docker.com/docker-for-mac/install/](https://docs.docker.com/docker-for-mac/install/)
 
-[https://docs.docker.com/install/linux/docker-ce/ubuntu/]
+[https://docs.docker.com/install/linux/docker-ce/ubuntu/](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
 
-[https://docs.docker.com/install/linux/docker-ce/centos/]
+[https://docs.docker.com/install/linux/docker-ce/centos/](https://docs.docker.com/install/linux/docker-ce/centos/)
 
-[https://training.play-with-docker.com/beginner-linux/]
+[https://training.play-with-docker.com/beginner-linux/](https://training.play-with-docker.com/beginner-linux/)
+
 
 
 Basic commands:
@@ -80,7 +81,7 @@ biodocker
 
 The Dockerfile:
 ```
-$ pwd 
+$ pwd
 /Users/username/fastqc-dev-folder
 
 $ ls
@@ -95,7 +96,7 @@ RUN apt-get update && apt-get upgrade -y \
 RUN wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.7.zip \
     && unzip fastqc_v0.11.7.zip \
     && rm fastqc_v0.11.7.zip \
-    && chmod +x /FastQC/fastqc 
+    && chmod +x /FastQC/fastqc
 
 ENV PATH "/FastQC:$PATH"
 ```
@@ -119,7 +120,7 @@ Getting more help:
 ```
 $ docker --help            # show all docker options and summaries
 
-$ docker COMMAND --help    # show options and summaries for a particular 
+$ docker COMMAND --help    # show options and summaries for a particular
                            # command
 ```
 
@@ -150,7 +151,7 @@ GCAGTTTAAGATCATTTTATTGAAGAGCAAG
 
 Pull the container:
 ```
-[login]$ idev 
+[login]$ idev
 ...
 [compute]$ module load tacc-singularity python3
 [compute]$ singularity pull --name wallen-fastqc-0.11.7.simg docker://wallen/fastqc:0.11.7
@@ -277,7 +278,7 @@ cori       docker     READY    6d2726df2e   2019-08-19T14:02:57 wallen/fastqc:0.
 
 Prepare the job script and submit the job:
 ```
-[login]$ cat shifter_job.slurm 
+[login]$ cat shifter_job.slurm
 #!/bin/bash
 #SBATCH --nodes=1
 #SBATCH --time=00:10:00
@@ -298,36 +299,41 @@ Submitted batch job 24000106
 
 Docker:
 
-[https://www.docker.com/]
+[https://www.docker.com/](https://www.docker.com/)
 
-[https://docs.docker.com/get-started/]
+[https://docs.docker.com/get-started/](https://docs.docker.com/get-started/)
 
-[https://training.play-with-docker.com/beginner-linux/]
+[https://training.play-with-docker.com/beginner-linux/](https://training.play-with-docker.com/beginner-linux/)
+
 
 
 Singularity:
 
-[https://singularity.lbl.gov/]
+[https://singularity.lbl.gov/](https://singularity.lbl.gov/)
 
-[https://sylabs.io/]
+[https://sylabs.io/](https://sylabs.io/)
+
 
 
 Shifter:
 
-[https://github.com/NERSC/shifter]
+[https://github.com/NERSC/shifter](https://github.com/NERSC/shifter)
 
-[https://docs.nersc.gov/programming/shifter/how-to-use/]
+[https://docs.nersc.gov/programming/shifter/how-to-use/](https://docs.nersc.gov/programming/shifter/how-to-use/)
 
-[https://bluewaters.ncsa.illinois.edu/shifter]
+[https://bluewaters.ncsa.illinois.edu/shifter](https://bluewaters.ncsa.illinois.edu/shifter)
+
 
 
 Containers:
 
-[https://hub.docker.com/]
+[https://hub.docker.com/](https://hub.docker.com/)
 
-[https://singularity-hub.org/]
+[https://singularity-hub.org/](https://singularity-hub.org/)
 
-[https://biocontainers.pro/]
+[https://biocontainers.pro/](https://biocontainers.pro/)
+
+
 
 Sample data:
 
@@ -335,20 +341,9 @@ Jay Hesselberth
 
 Genome Analysis Workshop
 
-https://molb7621.github.io/workshop/index.html 
+[https://molb7621.github.io/workshop/index.html](https://molb7621.github.io/workshop/index.html)
 
 
 Questions:
 
-Joe Allen | wallen@tacc.utexas.edu
-
-
-
-
-
-
-
-
-
-
-
+Joe Allen, wallen@tacc.utexas.edu
